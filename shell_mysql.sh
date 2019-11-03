@@ -40,8 +40,11 @@ echo -e  "Total Dir File is $sum "
 sql2=`mysql -uroot -proot -D git -e "select count(distinct file_name) from request_file where project='$project'"|awk NR==2`
 echo -e "\033[34m \033[5m"
 #颜色序列前加1,表示粗体
-echo -e  "\033[1;40;37m文件数量为$sql2\033[0m"
-echo -e " "
+echo -e  "查询不同文件保存到本地...."
+mkdir -p /tmp/$project
+sql3=`mysql -uroot -proot -D git -e "select @num:=@num+1 as 序号,result.file_name as file from (select distinct(a.file_name),a.project from request_file as a where a.project='$project') as result,(select @num:=0) r into outfile '/tmp/$project/distinct_file.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\r\n'"`
+echo -e "$sql"
+echo " "
 }
 
 get_mysql_result
