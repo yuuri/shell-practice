@@ -1,8 +1,8 @@
 #!/bin/bash
-now_path=`pwd`
+now_path=/root/GitHubCode
 echo '====Now Path is Following  ===='
 echo -e "$now_path"
-
+cd $now_path
 path_dir_list=`ls -l | grep ^d | awk '{print $9}'`
 for i in $path_dir_list
 do
