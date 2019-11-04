@@ -19,7 +19,7 @@ do
 	import_count=`cat $i | grep -w import | wc -l`
 	echo -e "$import_count"
 	#使用awk命令获取最后一个单词
-	last_word=`cat $i | grep import |awk '{print $NF}'`
+	last_word=`cat $i | grep import |awk '{print $NF}'|tr '\n' ' '`
 	echo -e "$last_word"
 	if [ $import_count == 0 ]
 	then 
@@ -27,14 +27,24 @@ do
 		let zero_count+=1
 	fi
 	echo -e " "
+	import[$a]=$last_word
+	array[$a]=$i
 	echo -e " "
 	let a+=1
 	
-	array[$a]=$i
 	#echo "number is $a"
 done
-array_var=$array[@]
-#echo -e "${var// /$"\n"}"
+array_var="${array[*]}"
+import_var="${import[*]}"
+#echo -e "${array_var// /$"\n"}" >>1.txt
+#echo -e "${import_var// /$"\n"}">>2.txt
+# 获取数组长度
+num=${#array[@]} 
+echo -e  "!!!!!Total Num is $num"
+for ((i=0;i<num;i++))
+{
+	echo -e "${array[i]},${import[i]}" >>result.csv
+}
 echo "numer is $a"
 echo -e "Zero Count is $zero_count"
 echo -e "\033[1;34mTotal Python File Number is $count \033[0m"
