@@ -44,6 +44,7 @@ echo -e  "查询不同文件保存到本地...."
 mkdir -p /tmp/$project
 sql3=`mysql -uroot -proot -D git -e "select @num:=@num+1 as 序号,result.file_name as file from (select distinct(a.file_name),a.project from request_file as a where a.project='$project') as result,(select @num:=0) r into outfile '/tmp/$project/distinct_file.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\r\n'"`
 echo -e "$sql"
+sql4=`mysql -uroot -proot -D git -e "select file_name,count(file_name) as file_count from request_file where project='pytorch/pytorch' group by file_name  having file_count>10) t;"`
 echo " "
 }
 
