@@ -6,22 +6,35 @@ echo -e "Run Git Pull...."
 git=`git pull`
 echo -e "$git"
 count=`find /home/pytorch -name "*.py" |wc -l`
-#file=`find /home/pytorch -name "*.py"`
-file=`find /home/pytorch/ -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu"`
+file=`find /home/pytorch/ -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu" -o -name "*.py" -o -name "*.mm" -o -name "*.m"`
 test_file=`find /home/pytorch -name "*.py" | grep test`
 tmp_file=tmp/pytorch_tmp
+key=include
 #action=`mkdir $tmp_file`
 #echo -e "$action"
+a=0
 for i in $file
 do
 	echo -e "$i"
 	echo -e "\033[1;34mImport info is following\033[0m"
 	#cat $i | grep -w import
-	import_count=`cat $i | grep -w include | wc -l`
-	echo -e "$import_count"
-	#使用awk命令获取最后一个单词
-	last_word=`cat $i | grep -w include |awk '{print $NF}'|tr '\n' ' '`
-	echo -e "$last_word"
+	extension=${i##*.}
+	if [ $extension == py ]
+	then
+		
+		import_count=`cat $i | grep -w import | wc -l`
+		echo -e "$import_count"
+		#使用awk命令获取最后一个单词
+		last_word=`cat $i | grep -w import |awk '{print $NF}'|tr '\n' ' '`
+		echo -e "$last_word"
+	else
+		
+		import_count=`cat $i | grep -w $key | wc -l`
+		echo -e "$import_count"
+		#使用awk命令获取最后一个单词
+		last_word=`cat $i | grep -w $key |awk '{print $NF}'|tr '\n' ' '`
+		echo -e "$last_word"
+	fi
 	if [ $import_count == 0 ]
 	then 
 		echo -e "This File No Import Info"
