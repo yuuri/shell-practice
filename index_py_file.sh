@@ -6,7 +6,8 @@ echo -e "Run Git Pull...."
 git=`git pull`
 echo -e "$git"
 count=`find /home/pytorch -name "*.py" |wc -l`
-file=`find /home/pytorch -name "*.py"| grep -v test`
+#file=`find /home/pytorch -name "*.py"`
+file=`find /home/pytorch/ -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu"`
 test_file=`find /home/pytorch -name "*.py" | grep test`
 tmp_file=tmp/pytorch_tmp
 #action=`mkdir $tmp_file`
@@ -16,10 +17,10 @@ do
 	echo -e "$i"
 	echo -e "\033[1;34mImport info is following\033[0m"
 	#cat $i | grep -w import
-	import_count=`cat $i | grep -w import | wc -l`
+	import_count=`cat $i | grep -w include | wc -l`
 	echo -e "$import_count"
 	#使用awk命令获取最后一个单词
-	last_word=`cat $i | grep import |awk '{print $NF}'|tr '\n' ' '`
+	last_word=`cat $i | grep -w include |awk '{print $NF}'|tr '\n' ' '`
 	echo -e "$last_word"
 	if [ $import_count == 0 ]
 	then 
@@ -43,8 +44,9 @@ num=${#array[@]}
 echo -e  "!!!!!Total Num is $num"
 for ((i=0;i<num;i++))
 {
-	echo -e "${array[i]},${import[i]}" >>result.csv
+	echo -e "${array[i]},${import[i]}" >>result_c.csv
 }
 echo "numer is $a"
 echo -e "Zero Count is $zero_count"
 echo -e "\033[1;34mTotal Python File Number is $count \033[0m"
+
