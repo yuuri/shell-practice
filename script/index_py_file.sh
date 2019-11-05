@@ -32,7 +32,7 @@ do
 		import_count=`cat $i | grep -w $key | wc -l`
 		echo -e "$import_count"
 		#使用awk命令获取最后一个单词
-		last_word=`cat $i | grep -w $key |awk '{print $NF}'|tr '\n' ' '`
+		last_word=`cat $i | grep -w $key |awk '{print $NF}'|tr '\n' ' '| tr '<>"' ' '`
 		echo -e "$last_word"
 	fi
 	if [ $import_count == 0 ]
