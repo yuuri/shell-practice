@@ -59,6 +59,7 @@ for ((i=0;i<num;i++))
 {
 	echo -e "${array[i]},${import[i]}" >>result_c.csv
 }
+sed -i 's/\/home\/pytorch\///g' result_c.csv
 echo "numer is $a"
 echo -e "Zero Count is $zero_count"
 echo -e "\033[1;34mTotal Python File Number is $count \033[0m"
