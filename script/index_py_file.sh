@@ -1,14 +1,24 @@
 #!/bin/bash
-pytorch=/home/pytorch
+if [ $1 ]
+then 
+	dir=$1
+else
+	echo -e "Please Add Project Dir...."
+	echo -e "Exit...."
+	exit
+fi
+#从路径中提取文件名
+project_name=$(basename $dir)
+echo -e "$project_name"
 now_path=`pwd`
-cd $pytorch
+cd $dir
 echo -e "Run Git Pull...."
 git=`git pull`
 echo -e "$git"
-count=`find /home/pytorch -name "*.py" |wc -l`
-file=`find /home/pytorch/ -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu" -o -name "*.py" -o -name "*.mm" -o -name "*.m"`
-test_file=`find /home/pytorch -name "*.py" | grep test`
-tmp_file=tmp/pytorch_tmp
+count=`find . -name "*.py" |wc -l`
+file=`find . -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu" -o -name "*.py" -o -name "*.mm" -o -name "*.m"`
+test_file=`find . -name "*.py" | grep test`
+#tmp_file=tmp/pytorch_tmp
 key=include
 #action=`mkdir $tmp_file`
 #echo -e "$action"
@@ -57,9 +67,11 @@ num=${#array[@]}
 echo -e  "!!!!!Total Num is $num"
 for ((i=0;i<num;i++))
 {
-	echo -e "${array[i]},${import[i]}" >>result_c.csv
+	echo -e "${array[i]},${import[i]}" >>$project_name.csv
 }
-sed -i 's/\/home\/pytorch\///g' result_c.csv
+
+sed_action=`sed -i "s/\.\//\//g"  $project_name.csv`
+echo -e "$sed_action"
 echo "numer is $a"
 echo -e "Zero Count is $zero_count"
 echo -e "\033[1;34mTotal Python File Number is $count \033[0m"

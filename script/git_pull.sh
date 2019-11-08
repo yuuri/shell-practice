@@ -1,5 +1,11 @@
 #!/bin/bash
-now_path=/root/GitHubCode
+if [ $1 ];
+then
+	now_path=$1
+else
+	now_path=`pwd`
+fi
+echo "Now Path is $now_path"
 echo '====Now Path is Following  ===='
 echo -e "$now_path"
 cd $now_path
