@@ -16,7 +16,7 @@ echo -e "Run Git Pull...."
 git=`git pull`
 echo -e "$git"
 count=`find . -name "*.py" |wc -l`
-file=`find . -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu" -o -name "*.py" -o -name "*.mm" -o -name "*.m"`
+file=`find . -name "*.h" -o -name "*.cc" -o -name "*.cpp" -o -name "*.cu" -o -name "*.py" -o -name "*.mm" -o -name "*.m" -o -name "*.ts" -o -name "*.js" -o -name "*.dart"`
 test_file=`find . -name "*.py" | grep test`
 #tmp_file=tmp/pytorch_tmp
 key=include
@@ -29,9 +29,8 @@ do
 	echo -e "\033[1;34mImport info is following\033[0m"
 	#cat $i | grep -w import
 	extension=${i##*.}
-	if [ $extension == py ]
+	if [ $extension == py -o $extension ==  ts -o $extension == js -o $extension == dart ]
 	then
-		
 		import_count=`cat $i | grep -w import | wc -l`
 		echo -e "$import_count"
 		#使用awk命令获取最后一个单词
@@ -70,7 +69,7 @@ for ((i=0;i<num;i++))
 	echo -e "${array[i]},${import[i]}" >>$project_name.csv
 }
 
-sed_action=`sed -i "s/\.\//\//g"  $project_name.csv`
+sed_action=`sed -i "s/\.\///g"  $project_name.csv`
 echo -e "$sed_action"
 echo "numer is $a"
 echo -e "Zero Count is $zero_count"
