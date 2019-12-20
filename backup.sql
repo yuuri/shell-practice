@@ -19,3 +19,4 @@ set @project='pytorch/pytorch';select pull_number,GROUP_CONCAT(distinct comment_
 select c.pull_number,timestampdiff(hour,p.request_date,c.comment_date) as time from comments as c inner join pull_request p on p.number=c.pull_number  and c.project=@project and p.project=@project and p.request_date between '2018-06-01' and '2019-09-01' group by c.pull_number order by c.pull_number
 /* string_index 分割字符串函数; locate 判断字符串是否存在某个字符函数，返回值为存在的个数，如果不存在，结果为0 */
 select pull_number,group_concat(distinct substring_index(file_name,'/',2)) from request_file where project='ceph/ceph' and locate('/',file_name)>0 group by pull_number limit 10;
+select pull_number,group_concat(distinct substring_index(file_name,'/',1)) from request_file where project=@project and pull_number in (select number from pull_request where project=@project and request_date between '2018-06-01' and '2019-09-01') and locate('/',file_name)>0 group by pull_number limit 10;
