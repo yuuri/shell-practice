@@ -17,4 +17,5 @@ select pull_number,count(file_name) as num from request_file where project='pyto
 set @project='pytorch/pytorch';select pull_number,GROUP_CONCAT(distinct comment_user) from comments where project=@project and pull_number in (select number from pull_request where project=@project and request_date between '2018-06-01 00:00:00' and '2019-09-01 00:00:00') group by pull_number order by pull_number
 /* 使用join 查询两个中的两个时间字段，使用timestampdiff函数计算两个时间的差值,函数第一个参数为求时间差的单位 */
 select c.pull_number,timestampdiff(hour,p.request_date,c.comment_date) as time from comments as c inner join pull_request p on p.number=c.pull_number  and c.project=@project and p.project=@project and p.request_date between '2018-06-01' and '2019-09-01' group by c.pull_number order by c.pull_number
-select pull_number,group_concat(distinct substring_index(file_name,'/',2)) from request_file where project='ceph/ceph' and locate(file_name,'/')=0 group by pull_number limit 10;
+/* string_index 分割字符串函数; locate 判断字符串是否存在某个字符函数，返回值为存在的个数，如果不存在，结果为0 */
+select pull_number,group_concat(distinct substring_index(file_name,'/',2)) from request_file where project='ceph/ceph' and locate('/',file_name)>0 group by pull_number limit 10;
