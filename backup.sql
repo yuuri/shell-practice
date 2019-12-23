@@ -20,3 +20,5 @@ select c.pull_number,timestampdiff(hour,p.request_date,c.comment_date) as time f
 /* string_index 分割字符串函数; locate 判断字符串是否存在某个字符函数，返回值为存在的个数，如果不存在，结果为0 */
 select pull_number,group_concat(distinct substring_index(file_name,'/',2)) from request_file where project='ceph/ceph' and locate('/',file_name)>0 group by pull_number limit 10;
 select pull_number,group_concat(distinct substring_index(file_name,'/',1)) from request_file where project=@project and pull_number in (select number from pull_request where project=@project and request_date between '2018-06-01' and '2019-09-01') and locate('/',file_name)>0 group by pull_number limit 10;
+/* 查询并导出查询结果为csv文件 */
+select @num:=@num+1 as 序号,result.* from (select project,count(distinct user_login) as USER_COUNT,count(1) as PR_COUNT,min(request_date) as START_TIME,max(request_date) as END_TIME from pull_request group by project) result ,(select @num:=0) r into outfile '/var/lib/mysql-files/mysql_20191223.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\r\n';
