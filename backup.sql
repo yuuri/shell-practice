@@ -24,3 +24,7 @@ select pull_number,group_concat(distinct substring_index(file_name,'/',1)) from 
 select @num:=@num+1 as 序号,result.* from (select project,count(distinct user_login) as USER_COUNT,count(1) as PR_COUNT,min(request_date) as START_TIME,max(request_date) as END_TIME from pull_request group by project) result ,(select @num:=0) r into outfile '/var/lib/mysql-files/mysql_20191223.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\r\n';
 /* 输出结果与上一条语句一样，差别在于输出表头 */
 select * from (select "NO" as NO,"PROJECT" as PROJECT,"USER_COUNT" as COUNT,"PR_COUNT" as PR_COUNT,"START_TIME" as START_TIME,"END_TIME" as END_TIME union all select @num:=@num+1 as NO,result.* from (select project,count(distinct user_login) as USER_COUNT,count(1) as PR_COUNT,min(request_date) as START_TIME,max(request_date) as END_TIME from pull_request group by project) result ,(select @num:=0) r) t into outfile '/var/lib/mysql-files/mysql_20191223_3.csv' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\r\n';
+
+/* 使用 with roll up 进行分组 (用来要求在一条group by子句中进行多个不同的分组) */
+set @project='ceph/ceph';select comment_user,group_concat(user_login),group_concat(comment_date) from (select number,user_login from pull_request where project=@project) p inner join (select comment_user,comment_date,pull_number from comments where project=@project) c on p.number=c.pull_number group by comment_user,user_login with rollup limit 100\G;
+
