@@ -28,3 +28,5 @@ select * from (select "NO" as NO,"PROJECT" as PROJECT,"USER_COUNT" as COUNT,"PR_
 /* 使用 with roll up 进行分组 (用来要求在一条group by子句中进行多个不同的分组) */
 set @project='ceph/ceph';select comment_user,group_concat(user_login),group_concat(comment_date) from (select number,user_login from pull_request where project=@project) p inner join (select comment_user,comment_date,pull_number from comments where project=@project) c on p.number=c.pull_number group by comment_user,user_login with rollup limit 100\G;
 
+/*COUNT_FIRST_COMMENT_DIFF */
+set @project='flutter/flutter';select c.pull_number,user_login as requester,timestampdiff(minute,p.request_date,c.comment_date)  as diff,comment_user,c.project from (select * from pull_request where project=@project and request_date between '2017-01-01' and '2019-01-01') p inner join (select * from comments where project=@project) c  on c.pull_number=p.number group by c.pull_number  having diff<=60 and  comment_user!='googlebot'  order by c.pull_number;
